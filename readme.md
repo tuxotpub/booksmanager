@@ -14,12 +14,12 @@ Die angewendeten Tegnologien sind:
 *   Spring Core/IoC als Application Context
 *   Tomcat (Embedded schon in Boot)
 *   Spring JPA/Hibernate
-*   In Memory H2
+*   In Memory H2 Database
 *   Lombok und MapStruct für Entities/Mapper 
 *   Swagger für Rest Dokumentation 
 *   Spring Unit/Integration Test Framework: JUnit, Mokito, Assertj, RestTemplate.
 *   Maven für Dependencies Management und Java 8 SDK.
-*   Intellij und spring initializr. Leider bin ich noch nicht fit mit JHipster, aber eine Schulung es ist schon geplant. 
+*   Intellij und spring initializr. 
 
 Swagger Url:
 ------------
@@ -57,6 +57,5 @@ Die folgenden Punkte sollen ergänzt werden:
 *   Mehrere Profiles (Dev, Prod, Default) und relationale DB, bzw. MySql eingestzt werden.
      
 **Hinweis: Das ist einen Test anwendung und dient vor allen zum Evaluieren der Technologien. 
-Deswegen die Anwendung hat keine bestimmte Spezifikation und nicht vollständig und wird die noch erweitert. 
-Also es ist keine Kunden Lieferung.**
+Deswegen die Anwendung hat keine bestimmte Spezifikation und nicht vollständig und wird die noch erweitert.**
 
