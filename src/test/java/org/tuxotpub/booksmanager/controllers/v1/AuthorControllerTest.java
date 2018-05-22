@@ -30,7 +30,6 @@ import static org.tuxotpub.booksmanager.controllers.v1.AuthorController.BASE_PAT
 
 /**
  * Created by tuxsamo.
- * test commit
  */
 public class AuthorControllerTest {
 
