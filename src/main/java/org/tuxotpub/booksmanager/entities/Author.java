@@ -22,18 +22,15 @@ import java.util.Set;
 @NamedEntityGraphs({
         @NamedEntityGraph(name = "authorParchmentsGraph",
                 attributeNodes = {@NamedAttributeNode("parchments")})})
-public class Author implements Serializable {
+public class Author {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank @Column(length = 255)
     private String name;
 
-    @NotBlank @Column(length = 255)
     private String surname;
 
-    @NaturalId(mutable = true) @Email
     private String email;
 
     @ManyToMany(mappedBy = "authors", cascade = {CascadeType.PERSIST})//, CascadeType.MERGE})
