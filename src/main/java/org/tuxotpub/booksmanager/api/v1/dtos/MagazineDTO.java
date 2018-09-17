@@ -10,10 +10,8 @@ import java.util.HashSet;
  * Created by tuxsamo.
  */
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(exclude = "authors") @ToString(exclude = "authors")
+@Data @NoArgsConstructor @AllArgsConstructor
+@ToString(callSuper = true)
 public class MagazineDTO extends ParchmentDTO {
     private LocalDate releaseDate;
 
