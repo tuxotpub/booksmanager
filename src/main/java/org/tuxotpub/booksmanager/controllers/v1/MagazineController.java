@@ -9,7 +9,6 @@ import org.tuxotpub.booksmanager.api.v1.dtos.MagazineDTO;
 import org.tuxotpub.booksmanager.api.v1.dtos.MagazinesDTO;
 import org.tuxotpub.booksmanager.services.parchments.MagazineService;
 
-
 /**
  * Created by tuxsamo.
  */
