@@ -5,10 +5,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.hibernate.annotations.NaturalId;
-import org.hibernate.validator.constraints.URL;
+import org.hibernate.validator.constraints.Length;
 import org.tuxotpub.booksmanager.entities.Parchment;
 
-import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
@@ -26,21 +25,22 @@ public class AuthorDTO {
     private Long id;
 
     @ApiModelProperty(notes = "First nameTest of the author.", example = "Johann", required = true, position = 1)
-    @Column(length = 255) @NotBlank(message = "Author last name musn't be blank")
+    @Length(min = 2, max = 255, message = "Author name length must be between 2 and 255 chars")
+    @NotBlank(message = "Author last name musn't be blank")
     private String name;
 
     @ApiModelProperty(notes = "Last nameTest of the author.", example = "Goethe", required = true, position = 2)
-    @NotBlank(message = "Author first name musn't be blank") @Column(length = 255)
+    @NotBlank(message = "Author first name musn't be blank")
+    @Length(min = 2, max = 255, message = "Author surname length must be between 2 and 255 chars")
     private String surname;
 
     @ApiModelProperty(notes = "Email of the author.", example = "nameTest@example.com", position = 3)
-    @NaturalId(mutable = true) @Email(message = "Author email name musn't be blank and to be a valid email address")
+    @NaturalId(mutable = true) @Email(message = "Author email name musn't be blank and must be a valid email address")
     private String email;
 
     @ApiModelProperty(notes = "Parchments (books/magazine) whriten by author.", example = "{Der Erlkönig, Faust Teil}", position = 4)
     @JsonIgnoreProperties("authors")
     private Set<Parchment> parchments = new HashSet<>();
 
-    @URL @NotBlank
     private String url;
 }

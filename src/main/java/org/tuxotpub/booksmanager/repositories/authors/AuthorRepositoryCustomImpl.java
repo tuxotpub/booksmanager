@@ -14,9 +14,7 @@ import java.util.Optional;
  */
 
 @Repository
-public class AuthorRepositoryCustomImpl
-        extends EntityRepositoryImpl
-        implements AuthorRepositoryCustom {
+public class AuthorRepositoryCustomImpl extends EntityRepositoryImpl implements AuthorRepositoryCustom {
 
     private final EntityManager em;
 
@@ -38,7 +36,7 @@ public class AuthorRepositoryCustomImpl
      */
     @Override
     public void deleteAuthorAndAllHisParchmentsById(Long id) {
-        Author author = Optional.ofNullable(em.find(Author.class, id)).orElseThrow(ResourceNotFoundException::new);
+        Author author = findAuthorViaDynamicGraphById(id).orElseThrow(ResourceNotFoundException::new);
 
         author.getParchments().forEach(parchment -> {
             if (parchment.getAuthors().size() == 1)

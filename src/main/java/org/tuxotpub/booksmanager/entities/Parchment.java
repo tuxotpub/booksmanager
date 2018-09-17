@@ -35,6 +35,7 @@ public abstract class Parchment {
     @NaturalId(mutable = true)
     private String isbn;
 
+    @Column(length = 255)
     private String title;
 
     //@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

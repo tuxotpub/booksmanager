@@ -19,7 +19,7 @@ public class BootstrapData implements CommandLineRunner {
     public static final String TEST_NAME = "Name";
     public static final String LNAME_TEST = "LName";
     public static final String EHOST_TEST = "@test.com";
-    public static final String ISBN_BOOK = "isbnBook";
+    public static final String ISBN_BOOK = "12345678901";
     public static final String ISBN_MAGAZINE = "isbnMagazine";
     public static final String TITLE_TEST = "TITLE_TEST";
     public static final String DESCPRIPTION_TEST = "description";
