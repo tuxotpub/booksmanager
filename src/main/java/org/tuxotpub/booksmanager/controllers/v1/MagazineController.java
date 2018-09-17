@@ -9,6 +9,8 @@ import org.tuxotpub.booksmanager.api.v1.dtos.MagazineDTO;
 import org.tuxotpub.booksmanager.api.v1.dtos.MagazinesDTO;
 import org.tuxotpub.booksmanager.services.parchments.MagazineService;
 
+import javax.validation.Valid;
+
 
 /**
  * Created by tuxsamo.
@@ -30,7 +32,7 @@ public class MagazineController {
     @ApiOperation(value = "Create or Update magazine", notes="Hier you can create or update magazine")
     @PostMapping("create")
     @ResponseStatus(HttpStatus.CREATED)
-    public MagazineDTO createMagazine(@RequestBody MagazineDTO magazineDTO){
+    public MagazineDTO createMagazine(@Valid @RequestBody MagazineDTO magazineDTO){
         return magazineService.create(magazineDTO);
     }
 
@@ -54,7 +56,7 @@ public class MagazineController {
 
     @ApiOperation(value = "Update magazine by id", notes="Hier you can update magazine by id")
     @PutMapping("updatebyid/{id}")
-    public MagazineDTO updateMagazine(@PathVariable Long id, @RequestBody MagazineDTO magazineDTO){
+    public MagazineDTO updateMagazine(@PathVariable Long id, @Valid @RequestBody MagazineDTO magazineDTO){
         return magazineService.updateById(id, magazineDTO);
     }
 

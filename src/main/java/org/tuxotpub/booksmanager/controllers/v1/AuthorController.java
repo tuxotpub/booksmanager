@@ -9,6 +9,7 @@ import org.tuxotpub.booksmanager.api.v1.dtos.AuthorDTO;
 import org.tuxotpub.booksmanager.api.v1.dtos.AuthorsDTO;
 import org.tuxotpub.booksmanager.services.authors.AuthorService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -31,7 +32,7 @@ public class AuthorController {
     @ApiOperation(value = "Create or Update author", notes="Hier you can create or update author")
     @PostMapping("create")
     @ResponseStatus(HttpStatus.CREATED)
-    public AuthorDTO createAuthor(@RequestBody AuthorDTO authorDTO){
+    public AuthorDTO createAuthor(@Valid @RequestBody AuthorDTO authorDTO){
         return authorService.createAuthor(authorDTO);
     }
 
@@ -56,7 +57,7 @@ public class AuthorController {
 
     @ApiOperation(value = "Update author by id", notes="Hier you can update author by id")
     @PutMapping("updatebyid/{id}")
-    public AuthorDTO updateAuthor(@PathVariable Long id, @RequestBody AuthorDTO authorDTO){
+    public AuthorDTO updateAuthor(@PathVariable Long id, @Valid @RequestBody AuthorDTO authorDTO){
         return authorService.updateAuthorById(id, authorDTO);
     }
 

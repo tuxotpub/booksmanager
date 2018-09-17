@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import org.tuxotpub.booksmanager.api.v1.dtos.BookDTO;
 import org.tuxotpub.booksmanager.api.v1.dtos.BooksDTO;
 import org.tuxotpub.booksmanager.services.parchments.BookService;
+
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -30,7 +32,7 @@ public class BookController {
     @ApiOperation(value = "Create or Update book", notes="Hier you can create or update book")
     @PostMapping("create")
     @ResponseStatus(HttpStatus.CREATED)
-    public BookDTO createBook(@RequestBody BookDTO bookDTO){
+    public BookDTO createBook(@Valid @RequestBody BookDTO bookDTO){
         return bookService.create(bookDTO);
     }
 
@@ -55,7 +57,7 @@ public class BookController {
 
     @ApiOperation(value = "Update book by id", notes="Hier you can update book by id")
     @PutMapping("updatebyid/{id}")
-    public BookDTO updateBook(@PathVariable Long id, @RequestBody BookDTO bookDTO){
+    public BookDTO updateBook(@PathVariable Long id, @Valid @RequestBody BookDTO bookDTO){
         return bookService.updateById(id, bookDTO);
     }
 
