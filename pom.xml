@@ -8,7 +8,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>booksmanager-JPA</name>
+	<name>booksmanagement</name>
 	<description>books manager Spring Boot</description>
 
 	<parent>
