@@ -24,7 +24,6 @@ public class MagazineController {
     public static final String FINDBYID_PATH = BASE_PATH + "id/";
     public static final String FINDBYISBN_PATH = BASE_PATH + "isbn/";
     private final MagazineService magazineService;
-    //private final ParchmentService<MagazineDTO, Magazine> magazineService;
 
     public MagazineController(MagazineService magazineService) {
         this.magazineService = magazineService;
