@@ -24,7 +24,6 @@ public class BookController {
     public static final String FINDBYID_PATH = BASE_PATH + "id/";
     public static final String FINDBYISBN_PATH = BASE_PATH + "isbn/";
     private final BookService bookService;
-    //private final ParchmentService<BookDTO, Book> bookService;
 
     public BookController(BookService bookService) {
         this.bookService = bookService;
