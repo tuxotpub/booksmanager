@@ -74,7 +74,7 @@ public class BookControllerTest {
     public void updateBookById() throws Exception {
         when(bookService.updateById(anyLong(),any(BookDTO.class))).thenReturn(BOOKDTO1);
 
-        mockMvc.perform(put(BASE_PATH + "updatebyid/" + BOOKDTO1.getId(), BOOKDTO1)
+        mockMvc.perform(put(BASE_PATH + BOOKDTO1.getId(), BOOKDTO1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJsonString(BOOKDTO1)))
                 .andExpect(status().isOk())
@@ -88,7 +88,7 @@ public class BookControllerTest {
     @Test
     public void deleteBookById() throws Exception {
 
-        mockMvc.perform( delete( BASE_PATH + "deletebyid/" + BOOKDTO1.getId() )
+        mockMvc.perform( delete( BASE_PATH + BOOKDTO1.getId() )
                 .contentType( MediaType.APPLICATION_JSON ) )
                 .andExpect( status().isOk() );
     }

@@ -9,7 +9,7 @@ import java.util.HashSet;
  */
 
 @Data @NoArgsConstructor @AllArgsConstructor
-@EqualsAndHashCode(exclude = "authors") @ToString(exclude = "authors")
+@ToString(callSuper = true)
 public class BookDTO extends ParchmentDTO {
     private String description;
 

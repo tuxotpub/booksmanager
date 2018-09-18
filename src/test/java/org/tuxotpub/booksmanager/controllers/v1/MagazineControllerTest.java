@@ -75,7 +75,7 @@ public class MagazineControllerTest {
     public void updateMagazineById() throws Exception {
         when(magazineService.updateById(anyLong(),any(MagazineDTO.class))).thenReturn(MAGAZINEDTO1);
 
-        mockMvc.perform(put(BASE_PATH + "updatebyid/" + MAGAZINEDTO1.getId(), MAGAZINEDTO1)
+        mockMvc.perform(put(BASE_PATH + MAGAZINEDTO1.getId(), MAGAZINEDTO1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJsonString(MAGAZINEDTO1)))
                 .andExpect(status().isOk())
@@ -92,7 +92,7 @@ public class MagazineControllerTest {
     @Test
     public void deleteMagazineById() throws Exception {
 
-        mockMvc.perform( delete( BASE_PATH + "deletebyid/" + MAGAZINEDTO1.getId() )
+        mockMvc.perform( delete( BASE_PATH + + MAGAZINEDTO1.getId() )
                 .contentType( MediaType.APPLICATION_JSON ) )
                 .andExpect( status().isOk() );
     }

@@ -85,14 +85,14 @@ public class AuthorControllerTestIT {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType( MediaType.APPLICATION_JSON );
         HttpEntity<AuthorDTO> request = new HttpEntity<>( toupdate , headers);
-        ResponseEntity<AuthorDTO> response = restTemplate.exchange(BASE_PATH + "updatebyid/" + id, HttpMethod.PUT, request, AuthorDTO.class);
+        ResponseEntity<AuthorDTO> response = restTemplate.exchange(BASE_PATH + id, HttpMethod.PUT, request, AuthorDTO.class);
         assertThat( response.getBody() ).isEqualToComparingFieldByField( authorService.getAuthorById( id ) );
     }
 
     @Test(expected = ResourceNotFoundException.class)
     public void t5deleteAuthorById() {
         long todelete = authorDTOS.get( AUTHORS_SIZE ).getId();
-        restTemplate.delete( BASE_PATH + "deletebyid/" + todelete  );
+        restTemplate.delete( BASE_PATH + todelete  );
         AUTHORS.remove( AUTHORS_SIZE );
         authorService.getAuthorById( todelete );
     }

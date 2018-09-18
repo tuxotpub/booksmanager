@@ -14,7 +14,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = "authors") @ToString(exclude = "authors")
+@EqualsAndHashCode(exclude = "authors") @ToString(exclude = "authors")//todo prüfen
 @EntityListeners({GenericListener.class})
 @Entity @Inheritance(strategy = InheritanceType.JOINED)
 //@Cacheable //@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "entityCache")
@@ -27,7 +27,7 @@ import java.util.Set;
         @JsonSubTypes.Type(value = Book.class, name = "book"),
         @JsonSubTypes.Type(value = Magazine.class, name = "magazine")
 })
-public abstract class Parchment implements Serializable {
+public abstract class Parchment {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,7 +35,7 @@ public abstract class Parchment implements Serializable {
     @NaturalId(mutable = true)
     private String isbn;
 
-    @NotBlank @Column(length = 255)
+    @Column(length = 255)
     private String title;
 
     //@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
