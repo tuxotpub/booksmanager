@@ -85,14 +85,14 @@ public class MagazineControllerTestIT {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType( MediaType.APPLICATION_JSON );
         HttpEntity<MagazineDTO> request = new HttpEntity<>( toupdate , headers );
-        ResponseEntity<MagazineDTO> response = restTemplate.exchange(BASE_PATH + "updatebyid/" + id, HttpMethod.PUT, request, MagazineDTO.class);
+        ResponseEntity<MagazineDTO> response = restTemplate.exchange(BASE_PATH + id, HttpMethod.PUT, request, MagazineDTO.class);
         assertThat( response.getBody() ).isEqualToComparingFieldByField( magazineService.getById( id ) );
     }
 
     @Test(expected = ResourceNotFoundException.class)
     public void t5deleteMagazineById() {
         long todelete = magazineDTOS.get( PARCHMENTS_SIZE ).getId();
-        restTemplate.delete( BASE_PATH + "deletebyid/" + todelete );
+        restTemplate.delete( BASE_PATH + todelete );
         MAGAZINES.remove( PARCHMENTS_SIZE );
         magazineService.getById( todelete );
     }

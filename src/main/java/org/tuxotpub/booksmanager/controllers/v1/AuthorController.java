@@ -21,8 +21,9 @@ import java.util.List;
 @Api(tags = {"authorDescription"}) @PropertySource(ignoreResourceNotFound=true,value="classpath:swagger.properties")
 public class AuthorController {
 
-    public static final String BASE_PATH = "/api/v1/authors/";
-    public static final String FINDBYID_PATH = BASE_PATH + "findbyid/";
+    public static final String BASE_PATH = "/api/authors/v1/";
+    public static final String FINDBYID_PATH = BASE_PATH + "id/";
+    public static final String FINDBYEMAIL_PATH = BASE_PATH + "email/";
     private final AuthorService authorService;
 
     public AuthorController(AuthorService authorService) {
@@ -44,25 +45,25 @@ public class AuthorController {
     }
 
     @ApiOperation(value = "Find author by id", notes="Hier you can find author by id")
-    @GetMapping("findbyid/{id}")
+    @GetMapping("id/{id}")
     public AuthorDTO getAuthorById(@PathVariable Long id){
         return authorService.getAuthorById(id);
     }
 
     @ApiOperation(value = "Find author by email", notes="Hier you can find author by email")
-    @GetMapping("findbyemail/{email}")
+    @GetMapping("email/{email}")
     public AuthorDTO getAuthorByEmail(@PathVariable String email){
         return authorService.getAuthorByEmail(email);
     }
 
     @ApiOperation(value = "Update author by id", notes="Hier you can update author by id")
-    @PutMapping("updatebyid/{id}")
+    @PutMapping("{id}")
     public AuthorDTO updateAuthor(@PathVariable Long id, @Valid @RequestBody AuthorDTO authorDTO){
         return authorService.updateAuthorById(id, authorDTO);
     }
 
     @ApiOperation(value = "Delete author by id", notes="Hier you can delete author by id")
-    @DeleteMapping("deletebyid/{id}")
+    @DeleteMapping("{id}")
     public void deleteAuthor(@PathVariable Long id){
         authorService.deleteAuthorById(id);
 

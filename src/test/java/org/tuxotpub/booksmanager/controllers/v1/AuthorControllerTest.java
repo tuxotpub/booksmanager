@@ -78,7 +78,7 @@ public class AuthorControllerTest {
 
         when(authorService.updateAuthorById(anyLong(),any(AuthorDTO.class))).thenReturn(AUTHORDTO1);
 
-        mockMvc.perform(put(BASE_PATH + "updatebyid/" + AUTHORDTO1.getId(), AUTHORDTO1)
+        mockMvc.perform(put(BASE_PATH + AUTHORDTO1.getId(), AUTHORDTO1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJsonString(AUTHORDTO1)))
                 .andExpect(status().isOk())
@@ -92,7 +92,7 @@ public class AuthorControllerTest {
     @Test
     public void deleteAuthorById() throws Exception {
 
-        mockMvc.perform( delete( BASE_PATH + "deletebyid/" + AUTHORDTO1.getId() )
+        mockMvc.perform( delete( BASE_PATH + AUTHORDTO1.getId() )
                 .contentType( MediaType.APPLICATION_JSON ) )
                 .andExpect( status().isOk() );
     }

@@ -86,14 +86,14 @@ public class BookControllerTestIT {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType( MediaType.APPLICATION_JSON );
         HttpEntity<BookDTO> request = new HttpEntity<>( toupdate , headers);
-        ResponseEntity<BookDTO> response = restTemplate.exchange(BASE_PATH + "updatebyid/" + id, HttpMethod.PUT, request, BookDTO.class);
+        ResponseEntity<BookDTO> response = restTemplate.exchange(BASE_PATH + id, HttpMethod.PUT, request, BookDTO.class);
         assertThat( response.getBody() ).isEqualToComparingFieldByField( bookService.getById( id ) );
     }
 
     @Test(expected = ResourceNotFoundException.class)
     public void t5deleteBookById() {
         long todelete = bookDTOS.get( PARCHMENTS_SIZE ).getId();
-        restTemplate.delete(BASE_PATH + "deletebyid/" + todelete );
+        restTemplate.delete(BASE_PATH + todelete );
         BOOKS.remove( PARCHMENTS_SIZE );
         bookService.getById( todelete );
     }
