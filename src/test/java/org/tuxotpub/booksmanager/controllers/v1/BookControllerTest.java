@@ -5,6 +5,8 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -20,6 +22,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.tuxotpub.booksmanager.TestHelper.*;
@@ -49,9 +53,10 @@ public class BookControllerTest {
         List<BookDTO> booksDTO = Arrays.asList( BOOKDTO1, BOOKDTO2 );
         when(bookService.getAll()).thenReturn(booksDTO);
 
-        mockMvc.perform(get(BASE_PATH + "all").contentType(MediaType.APPLICATION_JSON))
-                .andExpect( status().isOk() )
-                .andExpect( jsonPath("$.bookDTOS", hasSize( booksDTO.size() ) ) );
+        mockMvc.perform(get(BASE_PATH).contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andDo(print())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andExpect( status().isOk() );
     }
 
     @Test
@@ -59,7 +64,7 @@ public class BookControllerTest {
 
         when( bookService.create( BOOKDTO1 ) ).thenReturn( BOOKDTO1 );
 
-        mockMvc.perform(post( BASE_PATH + "create" )
+        mockMvc.perform(post( BASE_PATH + "/create" )
                 .contentType( MediaType.APPLICATION_JSON )
                 .content(toJsonString(BOOKDTO1)))
                 .andExpect(status().isCreated())
@@ -74,7 +79,7 @@ public class BookControllerTest {
     public void updateBookById() throws Exception {
         when(bookService.updateById(anyLong(),any(BookDTO.class))).thenReturn(BOOKDTO1);
 
-        mockMvc.perform(put(BASE_PATH + BOOKDTO1.getId(), BOOKDTO1)
+        mockMvc.perform(put(BASE_PATH + "/" + BOOKDTO1.getId(), BOOKDTO1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJsonString(BOOKDTO1)))
                 .andExpect(status().isOk())
@@ -88,7 +93,7 @@ public class BookControllerTest {
     @Test
     public void deleteBookById() throws Exception {
 
-        mockMvc.perform( delete( BASE_PATH + BOOKDTO1.getId() )
+        mockMvc.perform( delete( BASE_PATH + "/" + BOOKDTO1.getId() )
                 .contentType( MediaType.APPLICATION_JSON ) )
                 .andExpect( status().isOk() );
     }

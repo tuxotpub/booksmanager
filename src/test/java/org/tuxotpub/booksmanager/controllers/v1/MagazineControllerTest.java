@@ -5,6 +5,8 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -19,6 +21,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.tuxotpub.booksmanager.TestHelper.*;
@@ -48,9 +51,10 @@ public class MagazineControllerTest {
         List<MagazineDTO> magazinesDTO = Arrays.asList( MAGAZINEDTO1, MAGAZINEDTO2 );
         when(magazineService.getAll()).thenReturn(magazinesDTO);
 
-        mockMvc.perform(get(BASE_PATH + "all").contentType(MediaType.APPLICATION_JSON))
-                .andExpect( status().isOk() )
-                .andExpect( jsonPath("$.magazineDTOS", hasSize( magazinesDTO.size() ) ) );
+        mockMvc.perform(get(BASE_PATH).contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andDo(print())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andExpect( status().isOk() );
     }
 
     @Test
@@ -58,7 +62,7 @@ public class MagazineControllerTest {
 
         when( magazineService.create( MAGAZINEDTO1 ) ).thenReturn( MAGAZINEDTO1 );
 
-        mockMvc.perform(post( BASE_PATH + "create" )
+        mockMvc.perform(post( BASE_PATH + "/create" )
                 .contentType( MediaType.APPLICATION_JSON )
                 .content(toJsonString(MAGAZINEDTO1))).andDo(print())
                 .andExpect(status().isCreated())
@@ -75,7 +79,7 @@ public class MagazineControllerTest {
     public void updateMagazineById() throws Exception {
         when(magazineService.updateById(anyLong(),any(MagazineDTO.class))).thenReturn(MAGAZINEDTO1);
 
-        mockMvc.perform(put(BASE_PATH + MAGAZINEDTO1.getId(), MAGAZINEDTO1)
+        mockMvc.perform(put(BASE_PATH + "/" + MAGAZINEDTO1.getId(), MAGAZINEDTO1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJsonString(MAGAZINEDTO1)))
                 .andExpect(status().isOk())
@@ -92,7 +96,7 @@ public class MagazineControllerTest {
     @Test
     public void deleteMagazineById() throws Exception {
 
-        mockMvc.perform( delete( BASE_PATH + + MAGAZINEDTO1.getId() )
+        mockMvc.perform( delete( BASE_PATH + "/" + MAGAZINEDTO1.getId() )
                 .contentType( MediaType.APPLICATION_JSON ) )
                 .andExpect( status().isOk() );
     }

@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.tuxotpub.booksmanager.api.v1.dtos.*;
@@ -59,8 +61,8 @@ public class MagazineControllerTestIT {
 
     @Test
     public void t1getAllMagazines() {
-        MagazinesDTO response = restTemplate.getForObject(BASE_PATH + "all", MagazinesDTO.class);
-        assertThat( response.getMagazineDTOS() ).containsExactlyInAnyOrderElementsOf( magazineDTOS );
+        Resources<Resource<MagazinesDTO>> response = restTemplate.getForObject(BASE_PATH, Resources.class);
+        assertThat( response.getContent().size() ).isEqualTo( magazineDTOS.size() );
     }
 
     @Test
@@ -73,7 +75,7 @@ public class MagazineControllerTestIT {
     public void t3createMagazine() {
         MagazineDTO magazineDTO = magazineMapper.getMagazineDTO( buildMagazine( PARCHMENTS_SIZE ) );
         HttpEntity<MagazineDTO> request = new HttpEntity<>( magazineDTO );
-        MagazineDTO reponse = restTemplate.postForObject(BASE_PATH + "create", request, MagazineDTO.class );
+        MagazineDTO reponse = restTemplate.postForObject(BASE_PATH + "/create", request, MagazineDTO.class );
         assertThat( reponse ).isEqualToComparingFieldByField( magazineService.getById( reponse.getId() ) );
         MAGAZINES.add( magazineMapper.getMagazine( reponse ) );
     }
@@ -85,14 +87,14 @@ public class MagazineControllerTestIT {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType( MediaType.APPLICATION_JSON );
         HttpEntity<MagazineDTO> request = new HttpEntity<>( toupdate , headers );
-        ResponseEntity<MagazineDTO> response = restTemplate.exchange(BASE_PATH + id, HttpMethod.PUT, request, MagazineDTO.class);
+        ResponseEntity<MagazineDTO> response = restTemplate.exchange(BASE_PATH + "/" + id, HttpMethod.PUT, request, MagazineDTO.class);
         assertThat( response.getBody() ).isEqualToComparingFieldByField( magazineService.getById( id ) );
     }
 
     @Test(expected = ResourceNotFoundException.class)
     public void t5deleteMagazineById() {
         long todelete = magazineDTOS.get( PARCHMENTS_SIZE ).getId();
-        restTemplate.delete( BASE_PATH + todelete );
+        restTemplate.delete( BASE_PATH + "/" + todelete );
         MAGAZINES.remove( PARCHMENTS_SIZE );
         magazineService.getById( todelete );
     }

@@ -5,9 +5,6 @@ import lombok.*;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,7 +30,7 @@ public class Author {
     @Column(length = 255)
     private String surname;
 
-    @Column(length = 255)
+    @Column(length = 255) @NaturalId
     private String email;
 
     @ManyToMany(mappedBy = "authors", cascade = {CascadeType.PERSIST})//, CascadeType.MERGE})
