@@ -5,8 +5,11 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.tuxotpub.booksmanager.api.v1.dtos.AuthorDTO;
 import org.tuxotpub.booksmanager.services.authors.AuthorService;
@@ -21,6 +24,8 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.tuxotpub.booksmanager.TestHelper.AUTHORDTO1;
@@ -52,9 +57,10 @@ public class AuthorControllerTest {
         List<AuthorDTO> authorsDTO = Arrays.asList( AUTHORDTO1, AUTHORDTO2 );
         when(authorService.getAllAuthors()).thenReturn(authorsDTO);
 
-        mockMvc.perform(get(BASE_PATH + "all").contentType(MediaType.APPLICATION_JSON))
-                .andExpect( status().isOk() )
-                .andExpect( jsonPath("$.authorDTOS", hasSize( authorsDTO.size() ) ) );
+        mockMvc.perform(get(BASE_PATH).contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andDo(print())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andExpect( status().isOk() );
     }
 
     @Test
@@ -62,8 +68,8 @@ public class AuthorControllerTest {
 
         when( authorService.createAuthor( AUTHORDTO1 ) ).thenReturn( AUTHORDTO1 );
 
-        mockMvc.perform(post( BASE_PATH + "create" )
-                .contentType( MediaType.APPLICATION_JSON )
+        mockMvc.perform(post( BASE_PATH + "/create" )
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(toJsonString(AUTHORDTO1)))
                 .andExpect(status().isCreated())
                 .andExpect( jsonPath( "$.id", equalTo( AUTHORDTO1.getId().intValue() ) ) )
@@ -78,8 +84,8 @@ public class AuthorControllerTest {
 
         when(authorService.updateAuthorById(anyLong(),any(AuthorDTO.class))).thenReturn(AUTHORDTO1);
 
-        mockMvc.perform(put(BASE_PATH + AUTHORDTO1.getId(), AUTHORDTO1)
-                .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put(BASE_PATH + "/" + AUTHORDTO1.getId(), AUTHORDTO1)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(toJsonString(AUTHORDTO1)))
                 .andExpect(status().isOk())
                 .andExpect( jsonPath( "$.id", equalTo( AUTHORDTO1.getId().intValue() ) ) )
@@ -92,8 +98,8 @@ public class AuthorControllerTest {
     @Test
     public void deleteAuthorById() throws Exception {
 
-        mockMvc.perform( delete( BASE_PATH + AUTHORDTO1.getId() )
-                .contentType( MediaType.APPLICATION_JSON ) )
+        mockMvc.perform( delete( BASE_PATH + "/" + AUTHORDTO1.getId() )
+                .contentType( MediaType.APPLICATION_JSON_UTF8 ) )
                 .andExpect( status().isOk() );
     }
 }

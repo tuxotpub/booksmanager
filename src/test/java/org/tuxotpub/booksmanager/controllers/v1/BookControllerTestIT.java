@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.tuxotpub.booksmanager.api.v1.dtos.BookDTO;
@@ -60,8 +62,8 @@ public class BookControllerTestIT {
 
     @Test
     public void t1getAllBooks() {
-        BooksDTO response = restTemplate.getForObject(BASE_PATH + "all", BooksDTO.class);
-        assertThat( response.getBookDTOS() ).containsExactlyInAnyOrderElementsOf( bookDTOS );
+        Resources<Resource<BookDTO>> response = restTemplate.getForObject(BASE_PATH, Resources.class);
+        assertThat( response.getContent().size() ).isEqualTo( bookDTOS.size() );
     }
 
     @Test
@@ -74,7 +76,7 @@ public class BookControllerTestIT {
     public void t3createBook() {
         BookDTO bookDTO = bookMapper.getBookDTO( buildBook( PARCHMENTS_SIZE ) );
         HttpEntity<BookDTO> request = new HttpEntity<>(bookDTO);
-        BookDTO reponse = restTemplate.postForObject(BASE_PATH + "create", request, BookDTO.class);
+        BookDTO reponse = restTemplate.postForObject(BASE_PATH + "/create", request, BookDTO.class);
         assertThat( reponse ).isEqualToComparingFieldByField( bookService.getById( reponse.getId() ) );
         BOOKS.add( bookMapper.getBook( reponse ) );
     }
@@ -86,14 +88,14 @@ public class BookControllerTestIT {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType( MediaType.APPLICATION_JSON );
         HttpEntity<BookDTO> request = new HttpEntity<>( toupdate , headers);
-        ResponseEntity<BookDTO> response = restTemplate.exchange(BASE_PATH + id, HttpMethod.PUT, request, BookDTO.class);
+        ResponseEntity<BookDTO> response = restTemplate.exchange(BASE_PATH + "/" + id, HttpMethod.PUT, request, BookDTO.class);
         assertThat( response.getBody() ).isEqualToComparingFieldByField( bookService.getById( id ) );
     }
 
     @Test(expected = ResourceNotFoundException.class)
     public void t5deleteBookById() {
         long todelete = bookDTOS.get( PARCHMENTS_SIZE ).getId();
-        restTemplate.delete(BASE_PATH + todelete );
+        restTemplate.delete(BASE_PATH + "/" + todelete );
         BOOKS.remove( PARCHMENTS_SIZE );
         bookService.getById( todelete );
     }

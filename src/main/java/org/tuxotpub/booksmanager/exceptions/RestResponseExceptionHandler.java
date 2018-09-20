@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.util.InvalidMimeTypeException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -56,20 +55,20 @@ public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler
 
     @ExceptionHandler({Exception.class})
     public ResponseEntity<Object> handleAnyException(final Exception e, final WebRequest request) {
-        log.error(BAD_REQUEST.getReasonPhrase()+ ": " + e.getMessage(), e);
+        log.error(BAD_REQUEST.getReasonPhrase() + ": " + e.getMessage(), e);
         String bodyMessage = getMessage(BAD_REQUEST);
         return handleExceptionInternal(e, bodyMessage, new HttpHeaders(), BAD_REQUEST, request);
     }
 
     @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class, NumberFormatException.class, ConstraintViolationException.class, DataIntegrityViolationException.class})
     public final ResponseEntity<Object> handleBadRequest(final RuntimeException e, final WebRequest request) {
-        log.debug(BAD_REQUEST.getReasonPhrase()+ ": {}", e);
+        log.debug(BAD_REQUEST.getReasonPhrase() + ": {}", e);
         String bodyMessage = getMessage(BAD_REQUEST);
         return handleExceptionInternal(e, bodyMessage, new HttpHeaders(), BAD_REQUEST, request);
     }
 
     @ExceptionHandler({EntityNotFoundException.class, ResourceNotFoundException.class, ResourceNotFoundException.class})
-    public ResponseEntity<Object> handleNotFoundException(Exception e, WebRequest request){
+    public ResponseEntity<Object> handleNotFoundException(Exception e, WebRequest request) {
         log.warn("Resource not found: {} {}", e.getMessage(), request.getDescription(true));
         String bodyMessage = getMessage(NOT_FOUND);
         return handleExceptionInternal(e, bodyMessage, new HttpHeaders(), NOT_FOUND, request);
@@ -91,7 +90,7 @@ public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler
     }
 
     @ExceptionHandler({InvocationTargetException.class, NullPointerException.class, IllegalArgumentException.class,
-        IllegalStateException.class, ConversionFailedException.class, ClassCastException.class})
+            IllegalStateException.class, ConversionFailedException.class, ClassCastException.class})
     public ResponseEntity<Object> handle500s(final RuntimeException e, final WebRequest request) {
         logger.error(INTERNAL_SERVER_ERROR.getReasonPhrase(), e);
         String bodyMessage = getMessage(INTERNAL_SERVER_ERROR);

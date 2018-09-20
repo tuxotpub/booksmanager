@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.tuxotpub.booksmanager.api.v1.dtos.AuthorDTO;
@@ -59,8 +61,8 @@ public class AuthorControllerTestIT {
 
     @Test
     public void t1getAllAuthors() {
-        AuthorsDTO response = restTemplate.getForObject(BASE_PATH + "all", AuthorsDTO.class);
-        assertThat( response.getAuthorDTOS() ).containsExactlyInAnyOrderElementsOf( authorDTOS );
+        Resources<Resource<AuthorDTO>> response = restTemplate.getForObject(BASE_PATH, Resources.class);
+        assertThat( response.getContent().size() ).isEqualTo( authorDTOS.size() );
     }
 
     @Test
@@ -73,7 +75,7 @@ public class AuthorControllerTestIT {
     public void t3createAuthor() {
         AuthorDTO authorDTO = authorMapper.getAuthorDTO( buildAuthor( AUTHORS_SIZE ) );
         HttpEntity<AuthorDTO> request = new HttpEntity<>( authorDTO );
-        AuthorDTO reponse = restTemplate.postForObject(BASE_PATH + "create", request, AuthorDTO.class);
+        AuthorDTO reponse = restTemplate.postForObject(BASE_PATH + "/create", request, AuthorDTO.class);
         assertThat(reponse).isEqualToComparingFieldByField( authorService.getAuthorById( reponse.getId() ) );
         AUTHORS.add( authorMapper.getAuthor( reponse ) );
     }
@@ -85,14 +87,14 @@ public class AuthorControllerTestIT {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType( MediaType.APPLICATION_JSON );
         HttpEntity<AuthorDTO> request = new HttpEntity<>( toupdate , headers);
-        ResponseEntity<AuthorDTO> response = restTemplate.exchange(BASE_PATH + id, HttpMethod.PUT, request, AuthorDTO.class);
+        ResponseEntity<AuthorDTO> response = restTemplate.exchange(BASE_PATH + "/" + id, HttpMethod.PUT, request, AuthorDTO.class);
         assertThat( response.getBody() ).isEqualToComparingFieldByField( authorService.getAuthorById( id ) );
     }
 
     @Test(expected = ResourceNotFoundException.class)
     public void t5deleteAuthorById() {
         long todelete = authorDTOS.get( AUTHORS_SIZE ).getId();
-        restTemplate.delete( BASE_PATH + todelete  );
+        restTemplate.delete( BASE_PATH + "/" + todelete  );
         AUTHORS.remove( AUTHORS_SIZE );
         authorService.getAuthorById( todelete );
     }
