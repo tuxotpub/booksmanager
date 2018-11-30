@@ -16,7 +16,6 @@ import java.util.Set;
 /**
  * Created by tuxsamo.
  */
-
 @Data @NoArgsConstructor @AllArgsConstructor @EqualsAndHashCode(exclude = "parchments") @ToString(exclude = "parchments")
 @ApiModel(description = "Class representing an author of books or magazine.")
 public class AuthorDTO {
