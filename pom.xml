@@ -25,7 +25,6 @@
 		<org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
 		<springfox-swagger.version>2.7.0</springfox-swagger.version>
 		<org.hibernate-ehcache.version>5.2.13.Final</org.hibernate-ehcache.version>
-		<org.assertj.version>3.9.1</org.assertj.version>
 	</properties>
 
 	<dependencies>
