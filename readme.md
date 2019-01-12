@@ -10,7 +10,7 @@ Parchment: als basis Tabelle für Book und Magazine mit Inheritance Strategie JO
 
 Die angewendeten Tegnologien sind:
 ----------------------------------
-*   Spring Boot 2 als Microservice
+*   Spring Boot 2
 *   Spring Core/IoC als Application Context
 *   Tomcat (Embedded schon in Boot)
 *   Spring JPA/Hibernate
@@ -35,13 +35,13 @@ Hier sind die folgenden Regeln vorgesehen:
 *   Es darf keine Perchmant ohne Author bleiben. Also wenn alle zugehörigen Authors einer Parchment gelöscht sind, diese es soll automatisch (nach dem Löschen der letzten zugehörigen Author) gelöscht werden.
 *   Im Gegenteil, es darf ein Auhor ohne zugewiesene Parchment bleiben.
 
-Die Architektur diese Micro Service soll als Domain Driven Design (ähnliches) entworfen werden. 
+Die Architektur diese Anwendung soll als Domain Driven Design (ähnliches) entworfen werden. 
 Also mit den folgenden schichten: 
 
 *   Entities/Model (Authors, Parchments...).
 *   Repositories(DAO). Spring JPA repositories.
 *   Services für DTOs.
-*   Spring MVC RestController.
+*   Spring RestController.
 
 Es ist nur einen Back-end Implementierung mit JSON Request/Response Media Type. Also ohne Front-End.
 Für weitere Vorschläge bzw. Erweiterungen meiner Vorschlag, bin ich immer offen.
@@ -54,7 +54,7 @@ Die folgenden Punkte sollen ergänzt werden:
 *   Metrics/ Measurement im Source Code einfügen um eine Optimierte Analyse zu schaffen.
 *   Code Quality Reviewing ausführen.
 *   Die Rest Services können auch erweitert werden.
-*   Mehrere Profiles (Dev, Prod, Default) und relationale DB, bzw. MySql eingestzt werden.
+*   Mehrere Profiles (Dev, Prod, Default) und relationale DB, bzw. MySql/PostgreSql eingestzt werden.
      
 **Hinweis: Das ist einen Test anwendung und dient vor allen zum Evaluieren der Technologien. 
 Deswegen die Anwendung hat keine bestimmte Spezifikation und nicht vollständig und wird die noch erweitert.**
