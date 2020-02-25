@@ -1,26 +1,27 @@
 package org.tuxotpub.booksmanager.services;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.tuxotpub.booksmanager.api.v1.dtos.AuthorDTO;
-import org.tuxotpub.booksmanager.api.v1.dtos.AuthorsDTO;
-import org.tuxotpub.booksmanager.api.v1.mapper.AuthorMapper;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.tuxotpub.booksmanager.BaseTest;
+import org.tuxotpub.booksmanager.TestHelper;
 import org.tuxotpub.booksmanager.entities.Author;
-import org.tuxotpub.booksmanager.repositories.authors.AuthorRepository;
-import org.tuxotpub.booksmanager.services.authors.AuthorService;
-import org.tuxotpub.booksmanager.services.authors.AuthorServiceImpl;
+import org.tuxotpub.booksmanager.repositories.AuthorRepository;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.*;
-import static org.tuxotpub.booksmanager.TestHelper.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
+
 
 /**
  * Created by tuxsamo.
@@ -28,62 +29,60 @@ import static org.tuxotpub.booksmanager.TestHelper.*;
  * Assertj and mockito BDD style testing
  */
 
-public class AuthorServiceImplTest {
+@Execution(ExecutionMode.CONCURRENT)
+@ExtendWith({SpringExtension.class})
+public class AuthorServiceImplTest extends BaseTest {
 
     @Mock
     private AuthorRepository authorRepository;
 
-    private AuthorService authorService;
+    @InjectMocks
+    private AuthorServiceImpl authorService;
 
-    @Before
+    private List<Author> authors  = new ArrayList<>();
+
+    @BeforeEach
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-        authorService = new AuthorServiceImpl(AuthorMapper.INSTANCE, authorRepository);
+        //MockitoAnnotations.initMocks(this);
+        //authorService = new AuthorServiceImpl(authorRepository);
+
+        authors.add( TestHelper.GET_NEW_AUTHOR(1L) );
+        TestHelper.SETUP_ENTITY(authors.get(0), 1L);
+        authors.add( TestHelper.GET_NEW_AUTHOR(2L) );
+        TestHelper.SETUP_ENTITY(authors.get(1), 2L);
     }
 
     @Test
-    public void getAllAuthors() {
-        List<Author> authors = Arrays.asList(AUTHOR1, AUTHOR2);
-        given(authorRepository.findAll()).willReturn(authors);
-        AuthorsDTO authorsDTO = new AuthorsDTO(authorService.getAllAuthors());
-        then(authorRepository).should(times(1)).findAll();
-        assertThat(authorsDTO.getAuthorDTOS().size()).isEqualTo(2);
+    public void save() {
+        when(authorRepository.save(any(Author.class))).thenReturn(authors.get(0));
+        Author author= authorService.save(authors.get(0));
+        assertThat(author).isEqualTo(authors.get(0));
     }
 
     @Test
-    public void getAuthorById() {
-        given(authorRepository.findAuthorViaDynamicGraphById(anyLong())).willReturn(Optional.of(AUTHOR1));
-        AuthorDTO authorDTO = authorService.getAuthorById(1L);
-        then(authorRepository).should(times(1)).findAuthorViaDynamicGraphById(anyLong());
-        assertThat(authorDTO).isEqualToComparingFieldByField(AUTHORDTO1);
-    }
-
-    @Test(expected = ResourceNotFoundException.class)
-    public void getAuthorByIdNotFound() throws Exception {
-        given(authorRepository.findAuthorViaDynamicGraphById(anyLong())).willReturn(Optional.empty());
-        authorService.getAuthorById(1L);
+    public void update() {
+        when(authorRepository.save(any(Author.class))).thenReturn(authors.get(0));
+        Author author= authorService.update(authors.get(0));
+        assertThat(author).isEqualTo(authors.get(0));
     }
 
     @Test
-    public void createAuthor() {
-        given(authorRepository.save(any(Author.class))).willReturn(AUTHOR1);
-        AuthorDTO savedAuthorDTO = authorService.createAuthor(AUTHORDTO1);
-        then(authorRepository).should().save(any(Author.class));
-        assertThat(savedAuthorDTO).isEqualToComparingFieldByField(AUTHORDTO1);
+    public void findById() {
+        when(authorRepository.findById(anyLong())).thenReturn(Optional.of(authors.get(0)));
+        Author author= authorService.findById(1L);
+        assertThat(author).isEqualTo(authors.get(0));
     }
 
     @Test
-    public void updateAuthorById() {
-        given(authorRepository.findAuthorViaDynamicGraphById(anyLong())).willReturn(Optional.of(AUTHOR1));
-        given(authorRepository.save(any(Author.class))).willReturn(AUTHOR1);
-        AuthorDTO savedAuthorsDTO = authorService.updateAuthorById(AUTHORDTO1.getId(), AUTHORDTO1);
-        then(authorRepository).should().save(any(Author.class));
-        assertThat(savedAuthorsDTO).isEqualToComparingFieldByField(AUTHORDTO1);
+    public void findAll() {
+        when(authorRepository.findAll()).thenReturn(authors);
+        List<Author> authorTest  = authorService.findAll();
+        assertThat(authorTest.size()).isEqualTo(authors.size());
     }
 
     @Test
-    public void deleteAuthorById() {
-        authorRepository.deleteAuthorAndAllHisParchmentsById(1L);
-        verify(authorRepository, times(1)).deleteAuthorAndAllHisParchmentsById(1L);
+    public void deleteById() {
+        authorRepository.deleteById(authors.get(0).getEntityId());
+        verify(authorRepository, times(1)).deleteById(authors.get(0).getEntityId());
     }
 }

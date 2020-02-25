@@ -1,8 +1,8 @@
 package org.tuxotpub.booksmanager.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -11,18 +11,19 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = "parchments")
-@ToString(exclude = "parchments")
-@EntityListeners({GenericListener.class})
-@Entity
-//@Cacheable @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "entityCache")
+@EqualsAndHashCode(exclude = "Publications")
+@ToString(exclude = "Publications")
+@Builder
+@Entity @Audited
 @NamedEntityGraphs({
-        @NamedEntityGraph(name = "authorParchmentsGraph",
-                attributeNodes = {@NamedAttributeNode("parchments")})})
-public class Author {
+        @NamedEntityGraph(name = "authorPublicationsGraph",
+                attributeNodes = {@NamedAttributeNode("publications")}),
+})
+public class Author extends BaseEntity<Long> {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    public Author(Long id){
+        super(id);
+    }
 
     @Column(length = 255)
     private String name;
@@ -34,18 +35,12 @@ public class Author {
     private String email;
 
     @ManyToMany(mappedBy = "authors", cascade = {CascadeType.PERSIST})//, CascadeType.MERGE})
-    @JsonIgnoreProperties("authors")
-    private Set<Parchment> parchments = new HashSet<>();
+    //@JsonIgnoreProperties("authors")
+    private Set<Publication> publications = new HashSet<>();
 
-    public Author(String name, String surname, String email){
-        this.name = name;
-        this.surname = surname;
-        this.email = email;
-    }
-
-    public Author addParchment(Parchment parchment){
-        parchment.getAuthors().add(this);
-        parchments.add(parchment);
+    public Author addPublication(Publication publication){
+        publication.getAuthors().add(this);
+        publications.add(publication);
         return this;
     }
 }

@@ -2,18 +2,14 @@ package org.tuxotpub.booksmanager.repositories;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.repository.NoRepositoryBean;
-import javax.persistence.EntityGraph;
+
 import javax.persistence.EntityManager;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * Created by tuxsamo.
  */
 @Slf4j
 @NoRepositoryBean
-//@Repository as composition!
 public abstract class EntityRepositoryImpl
         implements EntityRepository
 {
@@ -34,7 +30,7 @@ public abstract class EntityRepositoryImpl
      * @param graphAttributes graph attributes that is mapper tomany to load
      * @return      Type of T
      */
-    @Override
+    /*@Override
     public  <T> Optional<T> findViaDynamicGraphById(Long id, Class<T> clazz, String ... graphAttributes){
         EntityGraph<T> graph = em.createEntityGraph(clazz);
         graph.addAttributeNodes(graphAttributes);
@@ -42,5 +38,5 @@ public abstract class EntityRepositoryImpl
         hints.put("javax.persistence.loadgraph", graph);
         T entity = em.find(clazz, id, hints);
         return Optional.ofNullable(entity);
-    }
+    }*/
 }

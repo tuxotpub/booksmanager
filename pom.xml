@@ -6,26 +6,84 @@
 	<groupId>org.tuxotpub</groupId>
 	<artifactId>booksmanagement</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
-
+	<packaging>${packaging.type}</packaging>
 	<name>booksmanager-JPA</name>
 	<description>books manager Spring Boot</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.1.RELEASE</version>
+		<version>2.2.4.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
+	<developers>
+		<developer>
+			<name>tuxotpub</name>
+			<email></email>
+			<organization></organization>
+			<organizationUrl></organizationUrl>
+		</developer>
+	</developers>
+	<scm>
+		<url>https://github.com/tuxotpub/booksmanagement</url>
+	</scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
-		<springfox-swagger.version>2.7.0</springfox-swagger.version>
-		<org.hibernate-ehcache.version>5.2.13.Final</org.hibernate-ehcache.version>
+		<springfox-swagger.version>2.9.2</springfox-swagger.version>
+        <lombok.version>1.18.10</lombok.version>
+		<jacoco.version>0.8.2</jacoco.version>
 	</properties>
+
+	<profiles>
+		<profile>
+			<id>jar</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<packaging.type>jar</packaging.type>
+				<spring.profile.active>jar</spring.profile.active>
+			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-devtools</artifactId>
+					<scope>runtime</scope>
+				</dependency>
+				<dependency>
+					<groupId>de.codecentric</groupId>
+					<artifactId>spring-boot-admin-starter-client</artifactId>
+					<version>2.1.6</version>
+				</dependency>
+			</dependencies>
+		</profile>
+
+		<profile>
+			<id>war</id>
+			<properties>
+				<packaging.type>war</packaging.type>
+				<spring.profile.active>war</spring.profile.active>
+			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+					<scope>provided</scope>
+				</dependency>
+				<dependency>
+					<groupId>javax.servlet</groupId>
+					<artifactId>servlet-api</artifactId>
+					<version>2.5</version>
+					<scope>provided</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
+
 
 	<dependencies>
 		<dependency>
@@ -37,11 +95,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-
-		<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-rest</artifactId>
-        </dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -60,18 +113,17 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-actuator</artifactId>
 		</dependency>
 
-		<dependency>
+		<!-- dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-hateoas</artifactId>
+		</dependency -->
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-envers</artifactId>
 		</dependency>
 
 		<dependency>
@@ -90,26 +142,7 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct-jdk8</artifactId>
-			<version>${org.mapstruct.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct-processor</artifactId>
-			<version>${org.mapstruct.version}</version>
-			<scope>provided</scope>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-ehcache</artifactId>
-			<version>${org.hibernate-ehcache.version}</version>
+            <version>${lombok.version}</version>
 		</dependency>
 
 		<dependency>
@@ -117,22 +150,33 @@
 			<artifactId>springfox-swagger2</artifactId>
 			<version>${springfox-swagger.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>${springfox-swagger.version}</version>
 		</dependency>
-
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-bean-validators</artifactId>
+			<version>${springfox-swagger.version}</version>
 		</dependency>
 
-	</dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+    </dependencies>
 
 	<build>
+		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -151,11 +195,6 @@
 							<artifactId>lombok</artifactId>
 							<version>${lombok.version}</version>
 						</path>
-						<path>
-							<groupId>org.mapstruct</groupId>
-							<artifactId>mapstruct-processor</artifactId>
-							<version>${org.mapstruct.version}</version>
-						</path>
 					</annotationProcessorPaths>
 					<compilerArgs>
 						<compilerArg>
@@ -164,72 +203,49 @@
 					</compilerArgs>
 				</configuration>
 			</plugin>
-
-			<!-- plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>2.13</version>
-				<executions>
-					<execution>
-						<id>integration-test</id>
-						<goals>
-							<goal>integration-test</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>verify</id>
-						<goals>
-							<goal>verify</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin -->
-
 			<plugin>
-				<groupId>io.fabric8</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.27.2</version>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco.version}</version>
 				<executions>
 					<execution>
-						<id>start</id>
-						<phase>pre-integration-test</phase>
 						<goals>
-							<goal>build</goal>
-							<goal>start</goal>
+							<goal>prepare-agent</goal>
 						</goals>
 					</execution>
 					<execution>
-						<id>stop</id>
-						<phase>post-integration-test</phase>
+						<id>report</id>
+						<phase>prepare-package</phase>
 						<goals>
-							<goal>stop</goal>
+							<goal>report</goal>
 						</goals>
 					</execution>
+					<execution>
+						<id>jacoco-check</id>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<haltOnFailure>false</haltOnFailure>
+							<rules>
+								<rule>
+									<element>METHOD</element>
+									<includes>
+										<include>org.tuxotpub.booksmanager.services.**</include>
+										<include>org.tuxotpub.booksmanager.controllers.**</include>
+									</includes>
+									<limits>
+										<limit>
+											<counter>INSTRUCTION</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0.8</minimum>
+										</limit>
+									</limits>
+								</rule>
+							</rules>
+						</configuration>
+					</execution>
 				</executions>
-				<configuration>
-					<images>
-						<image>
-							<name>docker.io/tuxotpub/${project.artifactId}</name>
-							<build>
-								<dockerFile>${project.basedir}/Dockerfile</dockerFile >
-								<tags>
-									<tag>latest</tag>
-									<tag>${project.version}</tag>
-								</tags>
-							</build>
-							<run>
-								<ports>
-									<port>8080:8080</port>
-								</ports>
-								<wait>
-									<!-- Check health OK 200 -->
-									<url>http://localhost:8080</url>
-									<time>60000</time>
-								</wait>
-							</run>
-						</image>
-					</images>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
